@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 require 'selenium-webdriver'
+
+HOST = 'https://demo.spreecommerce.org/'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

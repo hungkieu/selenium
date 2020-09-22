@@ -1,44 +1,10 @@
-require 'spec_helper.rb'
-
-HOST = 'https://demo.spreecommerce.org/'.freeze
-SIGN_UP_URL = 'https://demo.spreecommerce.org/signup'.freeze
-
-RSpec.shared_examples 'sign up successfully' do
-  it 'success' do
-    waiter.until do
-      driver.find_element(:id, 'new_spree_user')
-    end
-
-    email_input_element = driver.find_element(:id, 'spree_user_email')
-    password_input_element = driver.find_element(:id, 'spree_user_password')
-    password_confirmation_input_element = driver.find_element(
-      :id,
-      'spree_user_password_confirmation'
-    )
-    submit_input = driver.find_element(:xpath, '//input[@value="Sign Up"]')
-
-    email = "test9999+#{Time.now.to_i}@gmail.com"
-
-    email_input_element.send_keys email
-    password_input_element.send_keys '12345678'
-    password_confirmation_input_element.send_keys '12345678'
-
-    submit_input.click
-
-    flash_element = waiter.until do
-      text = 'Welcome! You have signed up successfully.'
-      driver.find_element(:xpath, "//*[contains(text(), '#{text}')]")
-    end
-
-    expect(flash_element.displayed?).to be_truthy
-  end
-end
+# frozen_string_literal: true
 
 RSpec.describe 'Sign Up' do
   let(:driver) { Selenium::WebDriver::Driver.for :chrome }
   let(:waiter) { Selenium::WebDriver::Wait.new }
 
-  context 'From home page' do
+  context 'From home page to sign up page' do
     before do
       driver.get(HOST)
 
@@ -56,6 +22,33 @@ RSpec.describe 'Sign Up' do
       sign_up_button_element.click
     end
 
-    include_examples 'sign up successfully'
+    it 'sign up successfully' do
+      waiter.until do
+        driver.find_element(:id, 'new_spree_user')
+      end
+
+      email_input_element = driver.find_element(:id, 'spree_user_email')
+      password_input_element = driver.find_element(:id, 'spree_user_password')
+      password_confirmation_input_element = driver.find_element(
+        :id,
+        'spree_user_password_confirmation'
+      )
+      submit_input = driver.find_element(:xpath, '//input[@value="Sign Up"]')
+
+      email = "test9999+#{Time.now.to_i}@gmail.com"
+
+      email_input_element.send_keys email
+      password_input_element.send_keys '12345678'
+      password_confirmation_input_element.send_keys '12345678'
+
+      submit_input.click
+
+      flash_element = waiter.until do
+        text = 'Welcome! You have signed up successfully.'
+        driver.find_element(:xpath, "//*[contains(text(), '#{text}')]")
+      end
+
+      expect(flash_element.displayed?).to be_truthy
+    end
   end
 end
